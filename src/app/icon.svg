@@ -1,0 +1,33 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFE66D;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background square -->
+  <rect width="40" height="40" rx="4" fill="url(#logoGradient)" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Bold checkmark -->
+  <path
+    d="M10 20 L16 26 L30 12"
+    stroke="#000000"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  
+  <!-- Upward arrow -->
+  <path
+    d="M28 8 L28 12 M26 10 L28 8 L30 10"
+    stroke="#000000"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

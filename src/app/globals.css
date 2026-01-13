@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #F2C94C;
+  --color-secondary: #82C7C7;
+  --color-accent: #6FCF97;
+  --color-border: #000000;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  
+  --color-gray-750: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-montserrat);
+
+  --shadow-hard: 4px 4px 0px 0px #000000;
+  --shadow-hard-sm: 2px 2px 0px 0px #000000;
+  --shadow-hard-lg: 6px 6px 0px 0px #000000;
+
+  --radius-sharp: 0px;
+  --radius-main: 20px;
+}
+
+/* Custom Base Styles */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Mobile-friendly touch targets */
+button,
+a,
+input[type="submit"],
+input[type="button"],
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve form inputs on mobile */
+input,
+textarea,
+select {
+  font-size: 16px; /* Prevents zoom on iOS */
+}
+
+@media (min-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: inherit;
+  }
+}
+
+/* Neo-brutalist Scrollbar */
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-left: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  /* ExtraBold */
+  letter-spacing: -0.02em;
+}
+
+.hard-shadow {
+  box-shadow: var(--shadow-hard);
+  border: 2px solid var(--color-border);
+}
+
+/* Admin Theme Styles */
+/* Light Theme (Default) */
+.admin-bg {
+  background-color: #f9fafb;
+}
+
+.admin-nav {
+  background-color: #ffffff;
+}
+
+.admin-heading {
+  color: #000000;
+}
+
+.admin-nav-link {
+  color: #374151;
+}
+
+.admin-nav-link:hover {
+  color: var(--color-primary);
+}
+
+.admin-link {
+  color: #6b7280;
+}
+
+.admin-link:hover {
+  color: #000000;
+}
+
+.admin-button {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: var(--color-border);
+}
+
+.admin-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Dark Theme */
+.dark-theme .admin-bg {
+  background-color: #0f172a;
+}
+
+.dark-theme .admin-nav {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark-theme .admin-heading {
+  color: #f1f5f9;
+}
+
+.dark-theme .admin-nav-link {
+  color: #cbd5e1;
+}
+
+.dark-theme .admin-nav-link:hover {
+  color: var(--color-primary);
+}
+
+.dark-theme .admin-link {
+  color: #94a3b8;
+}
+
+.dark-theme .admin-link:hover {
+  color: #f1f5f9;
+}
+
+.dark-theme .admin-button {
+  background-color: #334155;
+  color: #f1f5f9;
+  border-color: #475569;
+}
+
+.dark-theme .admin-button:hover {
+  background-color: #475569;
+}
+
+/* Admin Cards */
+.admin-card {
+  background-color: #ffffff;
+  border-color: var(--color-border);
+  color: #000000;
+}
+
+.dark-theme .admin-card {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+/* Admin Text */
+.admin-text {
+  color: #000000;
+}
+
+.admin-text-secondary {
+  color: #6b7280;
+}
+
+.dark-theme .admin-text {
+  color: #f1f5f9;
+}
+
+.dark-theme .admin-text-secondary {
+  color: #94a3b8;
+}
+
+/* Admin Inputs */
+.admin-input {
+  background-color: #ffffff;
+  border-color: var(--color-border);
+  color: #000000;
+}
+
+.admin-input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-primary);
+}
+
+.dark-theme .admin-input {
+  background-color: #334155;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+.dark-theme .admin-input:focus {
+  border-color: var(--color-primary);
+}
+
+.admin-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark-theme .admin-input::placeholder {
+  color: #64748b;
+}
+
+/* Select/Dropdown Options - Dark Theme */
+/* Ensure select dropdown is visible in dark theme */
+.dark-theme select.admin-input {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f1f5f9' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em 1em;
+  padding-right: 2.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.dark-theme select.admin-input:disabled {
+  background-color: #1e293b !important;
+  color: #64748b !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Style option elements for dark theme */
+/* Note: Some browsers have limited support for styling option elements */
+.dark-theme select.admin-input option {
+  background-color: #334155;
+  color: #f1f5f9;
+  padding: 0.5rem;
+}
+
+.dark-theme select.admin-input option:checked,
+.dark-theme select.admin-input option:focus {
+  background-color: var(--color-primary);
+  color: #000000;
+}
+
+/* Textarea styling for dark theme */
+.dark-theme textarea.admin-input {
+  background-color: #334155;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+.dark-theme textarea.admin-input::placeholder {
+  color: #64748b;
+}
+
+/* Checkbox styling for dark theme */
+.dark-theme input[type="checkbox"].admin-input {
+  background-color: #334155;
+  border-color: #475569;
+  accent-color: var(--color-primary);
+}
+
+.dark-theme input[type="checkbox"].admin-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Admin Labels */
+.admin-label {
+  color: #000000;
+}
+
+.dark-theme .admin-label {
+  color: #f1f5f9;
+}
