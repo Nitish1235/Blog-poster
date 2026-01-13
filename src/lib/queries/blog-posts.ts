@@ -74,13 +74,12 @@ export async function getBlogPostBySlug(slug: string, published: boolean = true)
         subcategory:subcategories(*)
       `)
       .eq('slug', slug)
-      .single()
 
     if (published) {
       query = query.eq('published', true).not('published_at', 'is', null)
     }
 
-    const { data: post, error } = await query
+    const { data: post, error } = await query.single()
 
     if (error || !post) {
       console.error('Error fetching blog post:', error)
