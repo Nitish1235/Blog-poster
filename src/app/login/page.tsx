@@ -16,10 +16,17 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if Supabase is configured
+    // In production we assume env vars are set in the hosting platform (e.g. Cloud Run)
+    // and we don't want to show the local ".env.local" warning banner.
+    if (process.env.NODE_ENV === "production") {
+      setIsConfigured(true);
+      return;
+    }
+
+    // Development check for local setup
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (url && key && !url.includes('your_supabase') && !key.includes('your_supabase') && !url.includes('placeholder')) {
+    if (url && key && !url.includes("your_supabase") && !key.includes("your_supabase") && !url.includes("placeholder")) {
       setIsConfigured(true);
     }
   }, []);
@@ -28,7 +35,8 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     
-    if (!isConfigured) {
+    // In development, prevent login if Supabase isn't configured
+    if (!isConfigured && process.env.NODE_ENV !== "production") {
       setError("Supabase is not configured. Please set up your .env.local file with your Supabase credentials.");
       return;
     }
@@ -61,9 +69,10 @@ export default function LoginPage() {
           Sign in to manage your blog content
         </p>
 
-        {!isConfigured && (
+        {/* Show configuration warning only in development */}
+        {!isConfigured && process.env.NODE_ENV !== "production" && (
           <div className="bg-yellow-50 border-2 border-yellow-500 text-yellow-800 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-4 font-medium text-sm sm:text-base">
-            <p className="font-bold mb-1 sm:mb-2">⚠️ Supabase Not Configured</p>
+            <p className="font-bold mb-1 sm:mb-2">⚠️ Supabase Not Configured (Local)</p>
             <p className="text-xs sm:text-sm">
               Please set up your <code className="bg-yellow-100 px-1 rounded">.env.local</code> file with your Supabase credentials.
               See <code className="bg-yellow-100 px-1 rounded">ENV_SETUP.md</code> for instructions.

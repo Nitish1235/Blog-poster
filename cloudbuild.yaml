@@ -12,6 +12,8 @@ steps:
     args: ['push', 'gcr.io/$PROJECT_ID/pickbettr:latest']
 
   # Deploy container image to Cloud Run
+  # NOTE: Set Supabase environment variables BEFORE deploying:
+  # gcloud run services update pickbettr --set-env-vars="NEXT_PUBLIC_SUPABASE_URL=your_url,NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key,NEXT_PUBLIC_SITE_URL=https://your-domain.com" --region=us-central1
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:

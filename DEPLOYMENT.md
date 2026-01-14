@@ -115,6 +115,46 @@ docker push gcr.io/YOUR_PROJECT_ID/pickbettr:latest
 gcloud run services replace service.yaml --region=us-central1
 ```
 
+## ⚠️ IMPORTANT: Set Environment Variables
+
+**You MUST set your Supabase environment variables after deployment, otherwise you'll see a "Supabase Not Configured" warning.**
+
+### Option 1: Set via gcloud CLI (Recommended)
+
+```bash
+# Replace with your actual values
+gcloud run services update pickbettr \
+  --set-env-vars="NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co,NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here,NEXT_PUBLIC_SITE_URL=https://your-domain.com" \
+  --region=us-central1
+```
+
+### Option 2: Set via Google Cloud Console
+
+1. Go to [Cloud Run Console](https://console.cloud.google.com/run)
+2. Click on your `pickbettr` service
+3. Click **"EDIT & DEPLOY NEW REVISION"**
+4. Go to **"Variables & Secrets"** tab
+5. Click **"ADD VARIABLE"** and add:
+   - `NEXT_PUBLIC_SUPABASE_URL` = `https://your-project.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `your_anon_key_here`
+   - `NEXT_PUBLIC_SITE_URL` = `https://your-domain.com`
+6. Click **"DEPLOY"**
+
+### Option 3: Update cloudbuild.yaml (Advanced)
+
+If you want to include env vars in the build process, modify `cloudbuild.yaml`:
+
+```yaml
+- '--set-env-vars'
+- 'NODE_ENV=production,NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL},NEXT_PUBLIC_SUPABASE_ANON_KEY=${_SUPABASE_KEY},NEXT_PUBLIC_SITE_URL=${_SITE_URL}'
+```
+
+Then build with substitutions:
+```bash
+gcloud builds submit --config cloudbuild.yaml \
+  --substitutions=_SUPABASE_URL="https://your-project.supabase.co",_SUPABASE_KEY="your_key",_SITE_URL="https://your-domain.com"
+```
+
 ## Post-Deployment
 
 ### 1. Get Your Service URL
