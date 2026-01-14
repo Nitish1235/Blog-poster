@@ -61,7 +61,7 @@ export async function generateMetadata({
             modifiedTime: modifiedDate.toISOString(),
             authors: [post.author_name || 'PickBettr'],
             section: post.category.name,
-            tags: [post.category.name, post.subcategory?.name].filter(Boolean),
+            tags: [post.category.name, post.subcategory?.name].filter((tag): tag is string => Boolean(tag)),
             images: [
                 {
                     url: featuredImage,
