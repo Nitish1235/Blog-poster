@@ -1,19 +1,33 @@
 import { createBrowserClient } from '@supabase/ssr'
 
+/**
+ * Browser Supabase client
+ *
+ * Note: The Supabase anon key is safe to expose in the browser.
+ * It is a *public* key and is protected by Row Level Security (RLS).
+ */
 export function createClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  // Prefer environment variables if they are available (local dev, properly configured builds)
+  const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // If env vars are missing, provide dummy values that will fail gracefully
-  // The @supabase/ssr library requires non-empty strings and valid URL format
-  if (!supabaseUrl || !supabaseAnonKey) {
-    // Use a valid-looking URL format that will pass validation
-    // but will fail on actual network requests (which is fine)
-    return createBrowserClient(
-      'https://xxxxxxxxxxxxxxxxxxxxx.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
+  if (envUrl && envKey) {
+    return createBrowserClient(envUrl, envKey)
+  }
+
+  // Fallback for production if build-time env vars were not wired correctly:
+  // TODO: REPLACE THESE TWO STRINGS with your actual Supabase project URL and anon key.
+  // You can copy them from Supabase Dashboard → Settings → API.
+  const hardcodedUrl = 'https://your-project-id.supabase.co'
+  const hardcodedAnonKey = 'your_anon_public_key_here'
+
+  if (!hardcodedUrl || !hardcodedAnonKey || hardcodedUrl.includes('your-project-id')) {
+    // Make failure explicit during development if the values weren't replaced.
+    throw new Error(
+      'Supabase client is not configured. Please set NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY env vars ' +
+      'or replace hardcodedUrl / hardcodedAnonKey in src/lib/supabase/client.ts.'
     )
   }
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+  return createBrowserClient(hardcodedUrl, hardcodedAnonKey)
 }
