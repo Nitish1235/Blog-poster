@@ -4,14 +4,26 @@ import { cookies } from 'next/headers'
 export async function createClient() {
   const cookieStore = await cookies()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  // Prefer environment variables if available
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  let supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
+  // Fallback to the same hardcoded values as the browser client, so that
+  // production keeps working even if env vars are not wired through correctly.
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      'Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. ' +
-      'Get these values from: https://supabase.com/dashboard/project/_/settings/api'
-    )
+    // IMPORTANT: keep these in sync with src/lib/supabase/client.ts
+    const hardcodedUrl = 'https://kbicmlvdsvoknmbaiejc.supabase.co'
+    const hardcodedAnonKey = 'sb_publishable_KpEe80akRDmo70TKWpDtXg_v7IVdO0r'
+
+    if (!hardcodedUrl || !hardcodedAnonKey) {
+      throw new Error(
+        'Missing Supabase configuration on the server. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY ' +
+        'or update hardcoded values in src/lib/supabase/server.ts.'
+      )
+    }
+
+    supabaseUrl = hardcodedUrl
+    supabaseAnonKey = hardcodedAnonKey
   }
 
   return createServerClient(
