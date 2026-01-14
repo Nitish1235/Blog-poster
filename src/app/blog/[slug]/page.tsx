@@ -42,7 +42,7 @@ export async function generateMetadata({
             'affiliate marketing',
             'product recommendations',
             'buying guide',
-        ].filter(Boolean),
+        ].filter((keyword): keyword is string => Boolean(keyword)),
         authors: [{ name: post.author_name || 'PickBettr' }],
         creator: 'PickBettr',
         publisher: 'PickBettr',
