@@ -8,6 +8,89 @@ import { format } from "date-fns";
 import { ProductCard } from "@/components/blog/ProductCard";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { TrackView } from "@/components/blog/TrackView";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const post = await getBlogPostBySlug(slug, true);
+
+    if (!post) {
+        return {
+            title: "Post Not Found",
+            description: "The requested blog post could not be found.",
+        };
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com';
+    const postUrl = `${baseUrl}/blog/${slug}`;
+    const featuredImage = post.featured_image_url || `${baseUrl}/icon.svg`;
+    const publishedDate = post.published_at ? new Date(post.published_at) : new Date(post.created_at);
+    const modifiedDate = new Date(post.updated_at);
+
+    return {
+        title: `${post.title} | PickBettr`,
+        description: post.excerpt || `Read our expert review and recommendations for ${post.title}. ${post.category.name} insights and product recommendations.`,
+        keywords: [
+            post.category.name,
+            post.subcategory?.name,
+            post.title,
+            'product review',
+            'affiliate marketing',
+            'product recommendations',
+            'buying guide',
+        ].filter(Boolean),
+        authors: [{ name: post.author_name || 'PickBettr' }],
+        creator: 'PickBettr',
+        publisher: 'PickBettr',
+        metadataBase: new URL(baseUrl),
+        alternates: {
+            canonical: postUrl,
+        },
+        openGraph: {
+            title: post.title,
+            description: post.excerpt || `Expert review and recommendations for ${post.title}`,
+            type: 'article',
+            locale: 'en_US',
+            siteName: 'PickBettr',
+            url: postUrl,
+            publishedTime: publishedDate.toISOString(),
+            modifiedTime: modifiedDate.toISOString(),
+            authors: [post.author_name || 'PickBettr'],
+            section: post.category.name,
+            tags: [post.category.name, post.subcategory?.name].filter(Boolean),
+            images: [
+                {
+                    url: featuredImage,
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.title,
+            description: post.excerpt || `Expert review and recommendations for ${post.title}`,
+            images: [featuredImage],
+            creator: '@pickbettr',
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+        },
+    };
+}
 
 export default async function BlogPost({
     params,
@@ -48,9 +131,74 @@ export default async function BlogPost({
     };
 
     const categoryColor = colorMap[post.category.color] || colorMap.primary;
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com';
+    const postUrl = `${baseUrl}/blog/${slug}`;
+
+    // Structured Data (JSON-LD) for SEO
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt || post.title,
+        "image": post.featured_image_url ? [post.featured_image_url] : [`${baseUrl}/icon.svg`],
+        "datePublished": publishedDate.toISOString(),
+        "dateModified": new Date(post.updated_at).toISOString(),
+        "author": {
+            "@type": "Person",
+            "name": post.author_name || "PickBettr",
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "PickBettr",
+            "logo": {
+                "@type": "ImageObject",
+                "url": `${baseUrl}/icon.svg`,
+            },
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": postUrl,
+        },
+        "articleSection": post.category.name,
+        "keywords": [post.category.name, post.subcategory?.name].filter(Boolean).join(", "),
+        "wordCount": post.content.replace(/<[^>]*>/g, "").split(/\s+/).length,
+        "timeRequired": `PT${post.read_time}M`,
+    };
+
+    // Add product structured data if products exist
+    const productStructuredData = post.products && post.products.length > 0 ? post.products.map((product) => ({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "description": product.description,
+        "image": product.image_url,
+        "offers": {
+            "@type": "Offer",
+            "url": product.amazon_affiliate_link,
+            "priceCurrency": "USD",
+            "price": product.price?.toString() || "0",
+            "availability": "https://schema.org/InStock",
+        },
+        "aggregateRating": product.rating && product.review_count ? {
+            "@type": "AggregateRating",
+            "ratingValue": product.rating.toString(),
+            "reviewCount": product.review_count.toString(),
+        } : undefined,
+    })).filter(Boolean) : [];
 
     return (
         <article className="min-h-screen bg-white pb-12 md:pb-20">
+            {/* Structured Data for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            />
+            {productStructuredData.length > 0 && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+                />
+            )}
             <TrackView postId={post.id} />
             {/* Header Section */}
             <div className={`${categoryColor.bgOpacity} border-b-2 border-border pt-20 sm:pt-24 md:pt-32 pb-12 md:pb-16`}>
@@ -190,7 +338,7 @@ export default async function BlogPost({
                     <h3 className="font-black uppercase text-lg md:text-xl mb-4">Share this article</h3>
                     <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                         <a 
-                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${post.slug}`)}`}
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${post.slug}`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto"
@@ -198,7 +346,7 @@ export default async function BlogPost({
                             <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto touch-manipulation"><Twitter size={18} /> Twitter</Button>
                         </a>
                         <a 
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${post.slug}`)}`}
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${post.slug}`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto"
@@ -206,7 +354,7 @@ export default async function BlogPost({
                             <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto touch-manipulation"><Facebook size={18} /> Facebook</Button>
                         </a>
                         <a 
-                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${post.slug}`)}`}
+                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${post.slug}`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto"

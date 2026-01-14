@@ -1,6 +1,46 @@
 import { BlogCard } from "@/components/blog/BlogCard";
 import { getAllBlogPosts } from "@/lib/queries/blog-posts";
 import { Card } from "@/components/ui/Card";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "All Articles | PickBettr - Product Reviews & Recommendations",
+    description: "Explore our complete collection of expert product reviews, buying guides, and recommendations. Find the best products across categories like tech, home, health, and more.",
+    keywords: ['product reviews', 'buying guides', 'product recommendations', 'affiliate marketing', 'best products', 'expert reviews'],
+    authors: [{ name: 'PickBettr' }],
+    creator: 'PickBettr',
+    publisher: 'PickBettr',
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'),
+    alternates: {
+        canonical: '/blog',
+    },
+    openGraph: {
+        title: "All Articles | PickBettr",
+        description: "Explore our complete collection of expert product reviews, buying guides, and recommendations.",
+        type: 'website',
+        locale: 'en_US',
+        siteName: 'PickBettr',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog`,
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: "All Articles | PickBettr",
+        description: "Explore our complete collection of expert product reviews and recommendations.",
+        images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/icon.svg`],
+        creator: '@pickbettr',
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+};
 
 export default async function BlogExample() {
     const posts = await getAllBlogPosts(true);

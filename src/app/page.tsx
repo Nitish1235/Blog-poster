@@ -8,9 +8,76 @@ import { BlogCard } from "@/components/blog/BlogCard";
 export default async function Home() {
   const posts = await getAllBlogPosts(true);
   const recentPosts = posts.slice(0, 3);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com';
+
+  // Structured Data for Homepage (Organization + WebSite)
+  const organizationStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PickBettr",
+    "url": baseUrl,
+    "logo": `${baseUrl}/icon.svg`,
+    "description": "We suggest the best products after thorough research and testing. Trust our expert recommendations to help you make confident purchases.",
+    "sameAs": [
+      "https://twitter.com/pickbettr",
+      "https://www.facebook.com/pickbettr",
+      "https://www.linkedin.com/company/pickbettr",
+    ],
+  };
+
+  const websiteStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PickBettr",
+    "url": baseUrl,
+    "description": "Trusted product recommendations and reviews. We help you find the best products that deliver real value.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${baseUrl}/blog?search={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  // Blog structured data for recent posts
+  const blogStructuredData = recentPosts.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "PickBettr Blog",
+    "url": `${baseUrl}/blog`,
+    "description": "Expert product reviews, buying guides, and recommendations",
+    "blogPost": recentPosts.map((post) => ({
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "description": post.excerpt,
+      "url": `${baseUrl}/blog/${post.slug}`,
+      "datePublished": post.published_at || post.created_at,
+      "author": {
+        "@type": "Person",
+        "name": post.author_name || "PickBettr",
+      },
+    })),
+  } : null;
 
   return (
     <div className="flex flex-col gap-16 pb-16">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
+      />
+      {blogStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogStructuredData) }}
+        />
+      )}
       {/* Hero Section */}
       <section id="hero" className="grid grid-cols-1 md:grid-cols-2 border-b-2 border-border">
         <div className="bg-primary p-6 md:p-12 lg:p-20 flex flex-col justify-center items-start gap-6 md:gap-8 border-b-2 md:border-b-0 md:border-r-2 border-border">

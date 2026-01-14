@@ -285,7 +285,7 @@ export default function PreviewPage() {
           <h3 className="font-black uppercase text-lg md:text-xl mb-4">Share this article</h3>
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <a 
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(previewPost.title)}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${previewPost.slug}`)}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(previewPost.title)}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${previewPost.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto"
@@ -293,7 +293,7 @@ export default function PreviewPage() {
               <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto touch-manipulation"><Twitter size={18} /> Twitter</Button>
             </a>
             <a 
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${previewPost.slug}`)}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${previewPost.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto"
@@ -301,7 +301,7 @@ export default function PreviewPage() {
               <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto touch-manipulation"><Facebook size={18} /> Facebook</Button>
             </a>
             <a 
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${previewPost.slug}`)}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${previewPost.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto"

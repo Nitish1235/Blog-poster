@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     shortcut: '/icon.svg',
   },
   manifest: '/manifest.json',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'),
   alternates: {
     canonical: '/',
   },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'PickBettr',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com',
     images: [
       {
         url: '/icon.svg',
