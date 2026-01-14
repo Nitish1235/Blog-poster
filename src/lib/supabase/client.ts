@@ -18,8 +18,8 @@ export function createClient() {
   // Fallback for production if build-time env vars were not wired correctly:
   // TODO: REPLACE THESE TWO STRINGS with your actual Supabase project URL and anon key.
   // You can copy them from Supabase Dashboard → Settings → API.
-  const hardcodedUrl = 'https://your-project-id.supabase.co'
-  const hardcodedAnonKey = 'your_anon_public_key_here'
+  const hardcodedUrl = 'https://kbicmlvdsvoknmbaiejc.supabase.co'
+  const hardcodedAnonKey = 'sb_publishable_KpEe80akRDmo70TKWpDtXg_v7IVdO0r'
 
   if (!hardcodedUrl || !hardcodedAnonKey || hardcodedUrl.includes('your-project-id')) {
     // Make failure explicit during development if the values weren't replaced.
