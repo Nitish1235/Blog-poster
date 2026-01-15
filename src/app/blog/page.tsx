@@ -79,6 +79,7 @@ export default async function BlogExample() {
                                 category: post.category.name,
                                 slug: post.slug,
                                 color: post.category.color,
+                                featured_image_url: post.featured_image_url,
                             }} 
                             index={index} 
                         />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 interface BlogPost {
     id: string;
@@ -9,6 +10,7 @@ interface BlogPost {
     category: string;
     slug: string;
     color: "primary" | "secondary" | "accent";
+    featured_image_url?: string | null;
 }
 
 interface BlogCardProps {
@@ -25,15 +27,27 @@ export const BlogCard = ({ post, index }: BlogCardProps) => {
         <Link href={`/blog/${post.slug}`} className="group relative block">
             <Card
                 sharp={sharpCorner}
-                className="h-full flex flex-col transition-transform hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_#000000] cursor-pointer"
+                className="h-full flex flex-col transition-transform hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_#000000] cursor-pointer bg-white"
                 noShadow
             >
-                {/* Image Placeholder */}
-                <div className={`h-40 sm:h-48 w-full border-b-2 border-border mb-3 md:mb-4 ${post.color === 'primary' ? 'bg-primary' :
-                        post.color === 'secondary' ? 'bg-secondary' : 'bg-accent'
-                    } flex items-center justify-center`}>
-                    <span className="text-3xl sm:text-4xl">📝</span>
-                </div>
+                {/* Featured Image */}
+                {post.featured_image_url ? (
+                    <div className="relative h-40 sm:h-48 w-full border-b-2 border-border mb-3 md:mb-4 overflow-hidden">
+                        <Image
+                            src={post.featured_image_url}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                    </div>
+                ) : (
+                    <div className={`h-40 sm:h-48 w-full border-b-2 border-border mb-3 md:mb-4 ${post.color === 'primary' ? 'bg-primary' :
+                            post.color === 'secondary' ? 'bg-secondary' : 'bg-accent'
+                        } flex items-center justify-center`}>
+                        <span className="text-3xl sm:text-4xl">📝</span>
+                    </div>
+                )}
 
                 <div className="p-4 sm:p-6 flex flex-col flex-grow">
                     <div className="flex justify-between items-center mb-3 md:mb-4">
@@ -43,7 +57,7 @@ export const BlogCard = ({ post, index }: BlogCardProps) => {
                         <ArrowUpRight className="opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" size={18} />
                     </div>
 
-                    <h3 className="text-xl sm:text-2xl font-black uppercase leading-tight group-hover:underline decoration-2 underline-offset-4 mb-2 md:mb-3">
+                    <h3 className="text-xl sm:text-2xl font-black uppercase leading-tight mb-2 md:mb-3">
                         {post.title}
                     </h3>
 

@@ -16,7 +16,8 @@ export async function getAllBlogPosts(published: boolean = true): Promise<BlogPo
       .order('created_at', { ascending: false })
 
     if (published) {
-      query = query.eq('published', true).not('published_at', 'is', null)
+      query = query.eq('published', true)
+      // Only filter by published_at if it exists, otherwise allow posts with published=true
     }
 
     const { data: posts, error } = await query
@@ -76,7 +77,8 @@ export async function getBlogPostBySlug(slug: string, published: boolean = true)
       .eq('slug', slug)
 
     if (published) {
-      query = query.eq('published', true).not('published_at', 'is', null)
+      query = query.eq('published', true)
+      // Only filter by published_at if it exists, otherwise allow posts with published=true
     }
 
     // Use maybeSingle() instead of single() to avoid 406 errors with multiple filters
@@ -142,7 +144,8 @@ export async function getBlogPostsByCategory(categorySlug: string, published: bo
     .order('created_at', { ascending: false })
 
   if (published) {
-    query = query.eq('published', true).not('published_at', 'is', null)
+    query = query.eq('published', true)
+    // Only filter by published_at if it exists, otherwise allow posts with published=true
   }
 
   const { data, error } = await query
@@ -178,7 +181,8 @@ export async function getBlogPostsBySubcategory(subcategorySlug: string, publish
     .order('created_at', { ascending: false })
 
   if (published) {
-    query = query.eq('published', true).not('published_at', 'is', null)
+    query = query.eq('published', true)
+    // Only filter by published_at if it exists, otherwise allow posts with published=true
   }
 
   const { data, error } = await query
