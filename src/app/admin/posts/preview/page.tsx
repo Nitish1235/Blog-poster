@@ -16,8 +16,6 @@ interface PreviewPost {
   content: string;
   category_id: string;
   subcategory_id: string | null;
-  author_name: string;
-  author_email: string;
   featured_image_url: string | null;
   read_time: number;
   published: boolean;

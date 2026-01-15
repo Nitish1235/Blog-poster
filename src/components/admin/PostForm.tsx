@@ -194,8 +194,6 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
     const contentEl = document.getElementById("content") as HTMLTextAreaElement;
     const categoryEl = document.querySelector('[name="category_id"]') as HTMLSelectElement;
     const subcategoryEl = document.querySelector('[name="subcategory_id"]') as HTMLSelectElement;
-    const authorNameEl = document.querySelector('[name="author_name"]') as HTMLInputElement;
-    const authorEmailEl = document.querySelector('[name="author_email"]') as HTMLInputElement;
     const readTimeEl = document.querySelector('[name="read_time"]') as HTMLInputElement;
     const featuredImageInput = document.getElementById("featured_image_url") as HTMLInputElement;
 
@@ -207,8 +205,6 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
       content: contentEl?.value || formData?.get("content")?.toString() || "",
       category_id: categoryEl?.value || formData?.get("category_id")?.toString() || "",
       subcategory_id: subcategoryEl?.value || formData?.get("subcategory_id")?.toString() || null,
-      author_name: authorNameEl?.value?.trim() || formData?.get("author_name")?.toString().trim() || "",
-      author_email: authorEmailEl?.value?.trim() || formData?.get("author_email")?.toString().trim() || "",
       featured_image_url: featuredImageUrl || featuredImageInput?.value || formData?.get("featured_image_url")?.toString() || null,
       read_time: parseInt(readTimeEl?.value || formData?.get("read_time")?.toString() || "5") || 5,
       products: products
@@ -384,34 +380,6 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
                 </option>
               ))}
             </select>
-          </div>
-
-          <div>
-            <label htmlFor="author_name" className="block font-bold uppercase text-sm mb-2">
-              Author Name *
-            </label>
-            <input
-              id="author_name"
-              name="author_name"
-              type="text"
-              required
-              defaultValue={post?.author_name || ""}
-              className="w-full h-12 px-4 border-2 border-gray-600 rounded-[10px] focus:outline-none focus:ring-2 focus:ring-primary bg-gray-700 text-white"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="author_email" className="block font-bold uppercase text-sm mb-2">
-              Author Email *
-            </label>
-            <input
-              id="author_email"
-              name="author_email"
-              type="email"
-              required
-              defaultValue={post?.author_email || ""}
-              className="w-full h-12 px-4 border-2 border-gray-600 rounded-[10px] focus:outline-none focus:ring-2 focus:ring-primary bg-gray-700 text-white"
-            />
           </div>
 
           <div>

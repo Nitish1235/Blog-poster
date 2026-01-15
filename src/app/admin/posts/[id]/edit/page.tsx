@@ -94,8 +94,6 @@ export default async function EditPostPage({
       content: formData.get("content") as string,
       category_id: formData.get("category_id") as string,
       subcategory_id: (formData.get("subcategory_id") as string) || null,
-      author_name: formData.get("author_name") as string,
-      author_email: formData.get("author_email") as string,
       featured_image_url: (formData.get("featured_image_url") as string) || null,
       read_time: parseInt(formData.get("read_time") as string) || 5,
       published,

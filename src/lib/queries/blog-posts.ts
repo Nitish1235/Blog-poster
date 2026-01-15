@@ -79,10 +79,15 @@ export async function getBlogPostBySlug(slug: string, published: boolean = true)
       query = query.eq('published', true).not('published_at', 'is', null)
     }
 
-    const { data: post, error } = await query.single()
+    // Use maybeSingle() instead of single() to avoid 406 errors with multiple filters
+    const { data: post, error } = await query.maybeSingle()
 
-    if (error || !post) {
+    if (error) {
       console.error('Error fetching blog post:', error)
+      return null
+    }
+
+    if (!post) {
       return null
     }
 
@@ -122,7 +127,7 @@ export async function getBlogPostsByCategory(categorySlug: string, published: bo
     .from('categories')
     .select('id')
     .eq('slug', categorySlug)
-    .single()
+    .maybeSingle()
 
   if (!category) return []
 
@@ -158,7 +163,7 @@ export async function getBlogPostsBySubcategory(subcategorySlug: string, publish
     .from('subcategories')
     .select('id')
     .eq('slug', subcategorySlug)
-    .single()
+    .maybeSingle()
 
   if (!subcategory) return []
 

@@ -43,7 +43,7 @@ export async function generateMetadata({
             'product recommendations',
             'buying guide',
         ].filter((keyword): keyword is string => Boolean(keyword)),
-        authors: [{ name: post.author_name || 'PickBettr' }],
+        authors: [{ name: 'PickBettr' }],
         creator: 'PickBettr',
         publisher: 'PickBettr',
         metadataBase: new URL(baseUrl),
@@ -59,7 +59,7 @@ export async function generateMetadata({
             url: postUrl,
             publishedTime: publishedDate.toISOString(),
             modifiedTime: modifiedDate.toISOString(),
-            authors: [post.author_name || 'PickBettr'],
+            authors: ['PickBettr'],
             section: post.category.name,
             tags: [post.category.name, post.subcategory?.name].filter((tag): tag is string => Boolean(tag)),
             images: [
@@ -145,7 +145,7 @@ export default async function BlogPost({
         "dateModified": new Date(post.updated_at).toISOString(),
         "author": {
             "@type": "Person",
-            "name": post.author_name || "PickBettr",
+            "name": "PickBettr",
         },
         "publisher": {
             "@type": "Organization",

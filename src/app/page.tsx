@@ -56,7 +56,7 @@ export default async function Home() {
       "datePublished": post.published_at || post.created_at,
       "author": {
         "@type": "Person",
-        "name": post.author_name || "PickBettr",
+        "name": "PickBettr",
       },
     })),
   } : null;
