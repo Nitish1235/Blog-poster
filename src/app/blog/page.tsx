@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "All Articles | PickBettr - Product Reviews & Recommendations",
-    description: "Explore our complete collection of expert product reviews, buying guides, and recommendations. Find the best products across categories like tech, home, health, and more.",
+    description: "We help you pick better products with expert reviews, detailed comparisons, and honest recommendations. Find the best products across categories like tech, home, health, and more.",
     keywords: ['product reviews', 'buying guides', 'product recommendations', 'affiliate marketing', 'best products', 'expert reviews'],
     authors: [{ name: 'PickBettr' }],
     creator: 'PickBettr',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: "All Articles | PickBettr",
-        description: "Explore our complete collection of expert product reviews, buying guides, and recommendations.",
+        description: "We help you pick better products with expert reviews, detailed comparisons, and honest recommendations.",
         type: 'website',
         locale: 'en_US',
         siteName: 'PickBettr',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: "All Articles | PickBettr",
-        description: "Explore our complete collection of expert product reviews and recommendations.",
+        description: "We help you pick better products with expert reviews and recommendations.",
         images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/icon.svg`],
         creator: '@pickbettr',
     },
@@ -58,8 +58,8 @@ export default async function BlogExample() {
                     </svg>
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl font-medium max-w-2xl">
-                    Explore our complete collection of articles on affiliate marketing, SEO, business growth, and more. 
-                    Expert insights and actionable strategies to help you succeed.
+                    We help you pick better products with expert reviews, detailed comparisons, and honest recommendations. 
+                    Find the best products that match your needs and make smarter purchasing decisions.
                 </p>
             </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { ExternalLink, ShoppingCart, CheckCircle2, Package } from "lucide-react";
+import { ExternalLink, ShoppingCart, Package } from "lucide-react";
 import Image from "next/image";
 
 interface ProductCardProps {
@@ -88,13 +88,6 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
           </p>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-            <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
-            <span className="font-medium">Verified Amazon Product</span>
-          </div>
-        </div>
       </div>
 
       {/* Right Side: Product Image and Buttons */}
