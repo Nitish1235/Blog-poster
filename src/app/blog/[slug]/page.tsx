@@ -232,15 +232,13 @@ export default async function BlogPost({
 
                             {/* Title */}
                             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-[1.1] tracking-tight">
-                                {post.title}
+                                {post.title || "Untitled Post"}
                             </h1>
 
                             {/* Excerpt/Description */}
-                            {post.excerpt && (
-                                <p className="text-lg md:text-xl font-medium text-gray-700 leading-relaxed max-w-2xl">
-                                    {post.excerpt}
-                                </p>
-                            )}
+                            <p className="text-lg md:text-xl font-medium text-gray-700 leading-relaxed max-w-2xl">
+                                {post.excerpt || "No description available."}
+                            </p>
 
                             {/* Date */}
                             <div className="flex items-center gap-2 pt-4 border-t-4 border-black">
@@ -250,8 +248,8 @@ export default async function BlogPost({
                         </div>
 
                         {/* Right Side: Featured Image */}
-                        {post.featured_image_url && (
-                            <div className="lg:sticky lg:top-24 order-first lg:order-last">
+                        <div className="lg:sticky lg:top-24 order-first lg:order-last">
+                            {post.featured_image_url ? (
                                 <div className="relative group">
                                     <div className="absolute -inset-2 bg-black rounded-[12px] transform rotate-2 group-hover:rotate-3 transition-transform"></div>
                                     <img
@@ -260,8 +258,12 @@ export default async function BlogPost({
                                         className="relative w-full h-auto border-4 border-black hard-shadow-lg rounded-[10px] transform group-hover:scale-[1.02] transition-transform duration-300"
                                     />
                                 </div>
-                            </div>
-                        )}
+                            ) : (
+                                <div className="w-full aspect-square bg-gray-100 border-4 border-black hard-shadow-lg rounded-[10px] flex items-center justify-center">
+                                    <span className="text-gray-400 font-bold uppercase">No Image</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -276,20 +278,7 @@ export default async function BlogPost({
                 {/* Affiliate Products Section */}
                 {post.products && post.products.length > 0 && (
                     <div className="mt-16 md:mt-20 pt-12 md:pt-16 border-t-4 border-black">
-                        <div className="mb-8 md:mb-12">
-                            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                                <div className={`${categoryColor.bg} p-3 md:p-4 border-2 border-black rounded-md hard-shadow-sm`}>
-                                    <ShoppingBag size={28} className="md:w-8 md:h-8 text-black" />
-                                </div>
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase leading-tight">
-                                    Recommended Products
-                                </h2>
-                            </div>
-                            <p className="text-lg md:text-xl font-medium text-gray-700 max-w-4xl leading-relaxed">
-                                Here are our top picks for this category. These products have been carefully selected based on quality, value, and customer reviews. Click any product to view full details and purchase on Amazon.
-                            </p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+                        <div className="space-y-6 md:space-y-8">
                             {post.products.map((product, index) => (
                                 <ProductCard
                                     key={product.id}

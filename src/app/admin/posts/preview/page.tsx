@@ -68,10 +68,20 @@ export default function PreviewPage() {
     if (storedPreview) {
       try {
         const post = JSON.parse(storedPreview);
+        console.log('Preview Post Data:', post);
+        console.log('Title:', post.title);
+        console.log('Excerpt:', post.excerpt);
+        console.log('Featured Image:', post.featured_image_url);
+        console.log('Products:', post.products);
+        console.log('Products Count:', post.products?.length || 0);
+        console.log('Content (first 200 chars):', post.content?.substring(0, 200));
+        console.log('Content type:', typeof post.content);
         setPreviewPost(post);
       } catch (error) {
         console.error('Error parsing preview data:', error);
       }
+    } else {
+      console.warn('No preview data found in sessionStorage');
     }
     setLoading(false);
   }, []);
@@ -129,14 +139,14 @@ export default function PreviewPage() {
     : colorMap.primary;
 
   return (
-    <article className="min-h-screen bg-white pb-12 md:pb-20">
+    <>
       {/* Preview Banner */}
-      <div className="bg-yellow-400 border-b-2 border-black py-3 px-4 sticky top-0 z-50">
+      <div className="bg-yellow-400 border-b-4 border-black py-3 px-4 sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Eye size={20} className="text-black" />
+          <div className="flex items-center gap-2 flex-wrap">
+            <Eye size={20} className="text-black flex-shrink-0" />
             <span className="font-black uppercase text-sm md:text-base">Preview Mode</span>
-            <span className="text-xs md:text-sm font-medium">This is how your post will look when published</span>
+            <span className="text-xs md:text-sm font-medium hidden sm:inline">This is how your post will look when published</span>
           </div>
           <Link href="/admin/posts">
             <Button variant="outline" size="sm" sharp="br" className="text-xs md:text-sm">
@@ -146,80 +156,92 @@ export default function PreviewPage() {
         </div>
       </div>
 
-      {/* Header Section */}
-      <div className={`${categoryColor.bgOpacity} border-b-2 border-border pt-20 sm:pt-24 md:pt-32 pb-12 md:pb-16`}>
-        <div className="container mx-auto px-4 max-w-4xl">
+      <article className="min-h-screen bg-white pb-12 md:pb-20">
+      {/* Header Section - Enhanced Horizontal Layout */}
+      <div className={`${categoryColor.bgOpacity} border-b-4 border-black pt-20 sm:pt-24 md:pt-32 pb-16 md:pb-20`}>
+        <div className="container mx-auto px-4 max-w-7xl">
           <Link
             href="/admin/posts"
-            className="inline-flex items-center font-bold uppercase mb-6 md:mb-8 hover:underline text-sm md:text-base touch-manipulation"
+            className="inline-flex items-center font-bold uppercase mb-8 md:mb-10 hover:text-primary transition-colors text-sm md:text-base touch-manipulation group"
           >
-            <ArrowLeft size={18} className="mr-2 md:w-5 md:h-5" /> Back to Posts
+            <ArrowLeft size={18} className="mr-2 md:w-5 md:h-5 group-hover:-translate-x-1 transition-transform" /> Back to Posts
           </Link>
 
-          <div className="flex gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap">
-            {previewPost.category && (
-              <span className={`${categoryColor.bg} border-2 border-black text-black px-2 md:px-3 py-1 font-bold uppercase text-xs md:text-sm rounded-md`}>
-                {previewPost.category.name}
-              </span>
-            )}
-            {previewPost.subcategory && (
-              <span className="bg-white border-2 border-black px-2 md:px-3 py-1 font-bold uppercase text-xs md:text-sm rounded-md">
-                {previewPost.subcategory.name}
-              </span>
-            )}
-            <span className="bg-white border-2 border-black px-2 md:px-3 py-1 font-bold uppercase text-xs md:text-sm rounded-md">
-              {previewPost.read_time} Min Read
-            </span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight mb-6 md:mb-8">
-            {previewPost.title}
-          </h1>
-
-          <div className="flex items-center gap-3 md:gap-4 border-t-2 border-black/10 pt-4 md:pt-6">
-            <div className={`w-10 h-10 md:w-12 md:h-12 ${categoryColor.bg} rounded-full border-2 border-black flex items-center justify-center text-lg md:text-xl flex-shrink-0`}>
-              {previewPost.author_name?.charAt(0).toUpperCase() || 'A'}
-            </div>
-            <div className="min-w-0">
-              <p className="font-bold uppercase text-sm md:text-base truncate">{previewPost.author_name || 'Author'}</p>
-              <div className="flex items-center text-xs md:text-sm text-gray-600 font-medium gap-3 md:gap-4">
-                <span className="flex items-center whitespace-nowrap">
-                  <Calendar size={12} className="mr-1 md:w-3.5 md:h-3.5" /> 
-                  {format(publishedDate, 'MMM d, yyyy')}
+          {/* Horizontal Layout: Title on Left, Image on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start">
+            {/* Left Side: Title and Metadata */}
+            <div className="flex flex-col space-y-6">
+              {/* Category Badges */}
+              <div className="flex gap-3 md:gap-4 flex-wrap">
+                {previewPost.category && (
+                  <span className={`${categoryColor.bg} border-2 border-black text-black px-3 md:px-4 py-2 font-black uppercase text-xs md:text-sm rounded-md hard-shadow-sm`}>
+                    {previewPost.category.name}
+                  </span>
+                )}
+                {previewPost.subcategory && (
+                  <span className="bg-white border-2 border-black px-3 md:px-4 py-2 font-black uppercase text-xs md:text-sm rounded-md hard-shadow-sm">
+                    {previewPost.subcategory.name}
+                  </span>
+                )}
+                <span className="bg-white border-2 border-black px-3 md:px-4 py-2 font-black uppercase text-xs md:text-sm rounded-md hard-shadow-sm flex items-center gap-1">
+                  <Calendar size={14} className="md:w-4 md:h-4" />
+                  {previewPost.read_time} Min
                 </span>
               </div>
+
+              {/* Title */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-[1.1] tracking-tight">
+                {previewPost.title || "Untitled Post"}
+              </h1>
+
+              {/* Excerpt/Description */}
+              <p className="text-lg md:text-xl font-medium text-gray-700 leading-relaxed max-w-2xl">
+                {previewPost.excerpt || "No description available."}
+              </p>
+
+              {/* Date */}
+              <div className="flex items-center gap-2 pt-4 border-t-4 border-black">
+                <Calendar size={18} className="md:w-5 md:h-5 text-gray-600" />
+                <span className="text-sm md:text-base text-gray-600 font-bold">{format(publishedDate, 'MMMM d, yyyy')}</span>
+              </div>
+            </div>
+
+            {/* Right Side: Featured Image */}
+            <div className="lg:sticky lg:top-24 order-first lg:order-last">
+              {previewPost.featured_image_url ? (
+                <div className="relative group">
+                  <div className="absolute -inset-2 bg-black rounded-[12px] transform rotate-2 group-hover:rotate-3 transition-transform"></div>
+                  <img
+                    src={previewPost.featured_image_url}
+                    alt={previewPost.title}
+                    className="relative w-full h-auto border-4 border-black hard-shadow-lg rounded-[10px] transform group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                </div>
+              ) : (
+                <div className="w-full aspect-square bg-gray-100 border-4 border-black hard-shadow-lg rounded-[10px] flex items-center justify-center">
+                  <span className="text-gray-400 font-bold uppercase">No Image</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="container mx-auto px-4 max-w-3xl py-8 md:py-12">
-        {previewPost.featured_image_url && (
-          <img
-            src={previewPost.featured_image_url}
-            alt={previewPost.title}
-            className="w-full h-auto border-2 border-black hard-shadow rounded-[10px] mb-8"
+      <div className="container mx-auto px-4 max-w-4xl py-12 md:py-16">
+        {previewPost.content ? (
+          <div 
+            className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-headings:mb-6 prose-headings:mt-12 max-w-none prose-img:w-full prose-img:rounded-[12px] prose-img:border-2 prose-img:border-black prose-img:hard-shadow prose-a:text-primary prose-a:font-bold prose-a:underline hover:prose-a:text-primary/80 prose-p:leading-relaxed prose-p:mb-6 prose-ul:space-y-2 prose-ol:space-y-2 prose-li:marker:text-black prose-strong:font-black prose-strong:text-black prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:font-medium"
+            dangerouslySetInnerHTML={{ __html: previewPost.content }}
           />
+        ) : (
+          <p className="text-gray-500 italic">No content available.</p>
         )}
-        <div 
-          className="prose prose-sm sm:prose-base md:prose-lg prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight max-w-none prose-img:w-full prose-img:rounded-[10px] prose-a:text-primary prose-a:font-bold prose-a:underline"
-          dangerouslySetInnerHTML={{ __html: previewPost.content }}
-        />
 
         {/* Affiliate Products Section */}
         {previewPost.products && previewPost.products.length > 0 && (
-          <div className="mt-12 md:mt-16 pt-6 md:pt-8 border-t-2 border-border">
-            <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
-              <ShoppingBag size={24} className="md:w-7 md:h-7 text-primary flex-shrink-0" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase">
-                Recommended Products
-              </h2>
-            </div>
-            <p className="text-gray-600 font-medium mb-6 md:mb-8 max-w-3xl text-sm md:text-base">
-              Here are our top picks for this category. These products have been carefully selected based on quality, value, and customer reviews. Click any product to view full details and purchase on Amazon.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="mt-16 md:mt-20 pt-12 md:pt-16 border-t-4 border-black">
+            <div className="space-y-6 md:space-y-8">
               {previewPost.products.map((product, index) => (
                 <ProductCard
                   key={product.id}
@@ -238,29 +260,25 @@ export default function PreviewPage() {
                 />
               ))}
             </div>
-            <div className="mt-8 p-6 bg-gray-50 border-2 border-border rounded-[10px]">
-              <p className="text-sm font-medium text-gray-700 leading-relaxed">
-                <strong className="font-black uppercase">Disclosure:</strong> As an Amazon Associate, we earn from qualifying purchases. 
-                The products featured above are independently selected by our editorial team. 
-                When you purchase through our affiliate links, we may earn a commission at no extra cost to you. 
-                All product information is accurate at the time of publication, but prices and availability may change.
-              </p>
-            </div>
           </div>
         )}
 
         {/* Related Articles Section */}
         {previewPost.related_articles && previewPost.related_articles.length > 0 && (
-          <div className="mt-12 md:mt-16 pt-6 md:pt-8 border-t-2 border-border">
-            <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
-              <BookOpen size={24} className="md:w-7 md:h-7 text-primary flex-shrink-0" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase">
-                Related Articles
-              </h2>
+          <div className="mt-16 md:mt-20 pt-12 md:pt-16 border-t-4 border-black">
+            <div className="mb-8 md:mb-12">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className={`${categoryColor.bg} p-3 md:p-4 border-2 border-black rounded-md hard-shadow-sm`}>
+                  <BookOpen size={28} className="md:w-8 md:h-8 text-black" />
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase leading-tight">
+                  Related Articles
+                </h2>
+              </div>
+              <p className="text-lg md:text-xl font-medium text-gray-700 max-w-4xl leading-relaxed">
+                Continue reading with these related articles from the same category.
+              </p>
             </div>
-            <p className="text-gray-600 font-medium mb-6 md:mb-8 max-w-3xl text-sm md:text-base">
-              Continue reading with these related articles from the same category.
-            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
               {previewPost.related_articles.map((article, index) => (
                 <BlogCard
@@ -281,9 +299,9 @@ export default function PreviewPage() {
         )}
 
         {/* Share Section */}
-        <div className="mt-12 md:mt-16 pt-6 md:pt-8 border-t-2 border-border">
-          <h3 className="font-black uppercase text-lg md:text-xl mb-4">Share this article</h3>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+        <div className="mt-16 md:mt-20 pt-12 md:pt-16 border-t-4 border-black">
+          <h3 className="font-black uppercase text-xl md:text-2xl mb-6 md:mb-8">Share this article</h3>
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
             <a 
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(previewPost.title)}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://postbettr.com'}/blog/${previewPost.slug}`)}`}
               target="_blank"
@@ -312,5 +330,6 @@ export default function PreviewPage() {
         </div>
       </div>
     </article>
+    </>
   );
 }

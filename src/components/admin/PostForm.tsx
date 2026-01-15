@@ -67,7 +67,15 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
           },
         ]
   );
+  const [featuredImageUrl, setFeaturedImageUrl] = useState<string>(post?.featured_image_url || "");
   const supabase = createClient();
+
+  // Update featured image URL when post changes
+  useEffect(() => {
+    if (post?.featured_image_url) {
+      setFeaturedImageUrl(post.featured_image_url);
+    }
+  }, [post?.featured_image_url]);
 
   useEffect(() => {
     if (selectedCategoryId) {
@@ -171,29 +179,45 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
   };
 
   const handlePreview = async () => {
-    // Get form data
-    const form = document.querySelector('form') as HTMLFormElement;
-    if (!form) return;
+    // Get form data directly from input elements (more reliable than FormData)
+    const titleEl = document.getElementById("title") as HTMLInputElement;
+    const slugEl = document.getElementById("slug") as HTMLInputElement;
+    const excerptEl = document.getElementById("excerpt") as HTMLTextAreaElement;
+    const contentEl = document.getElementById("content") as HTMLTextAreaElement;
+    const categoryEl = document.querySelector('[name="category_id"]') as HTMLSelectElement;
+    const subcategoryEl = document.querySelector('[name="subcategory_id"]') as HTMLSelectElement;
+    const authorNameEl = document.querySelector('[name="author_name"]') as HTMLInputElement;
+    const authorEmailEl = document.querySelector('[name="author_email"]') as HTMLInputElement;
+    const readTimeEl = document.querySelector('[name="read_time"]') as HTMLInputElement;
 
-    const formData = new FormData(form);
-    
-    // Prepare preview data
+    // Prepare preview data (prefer state for featured image)
     const previewData = {
-      title: formData.get('title') as string,
-      slug: formData.get('slug') as string,
-      excerpt: formData.get('excerpt') as string,
-      content: formData.get('content') as string,
-      category_id: formData.get('category_id') as string,
-      subcategory_id: (formData.get('subcategory_id') as string) || null,
-      author_name: formData.get('author_name') as string,
-      author_email: formData.get('author_email') as string,
-      featured_image_url: (formData.get('featured_image_url') as string) || null,
-      read_time: parseInt(formData.get('read_time') as string) || 5,
-      products: products.filter(
-        (p) => p.name && p.amazon_affiliate_link && p.image_url && p.description
-      ),
+      title: titleEl?.value?.trim() || "",
+      slug: slugEl?.value?.trim() || "",
+      excerpt: excerptEl?.value?.trim() || "",
+      content: contentEl?.value || "",
+      category_id: categoryEl?.value || "",
+      subcategory_id: subcategoryEl?.value || null,
+      author_name: authorNameEl?.value?.trim() || "",
+      author_email: authorEmailEl?.value?.trim() || "",
+      featured_image_url: featuredImageUrl || null,
+      read_time: parseInt(readTimeEl?.value || "5") || 5,
+      products: products
+        .filter((p) => p.name && p.amazon_affiliate_link && p.image_url && p.description)
+        .map((p, index) => ({
+          ...p,
+          id: `preview-product-${index}`,
+        })),
       related_articles: selectedRelatedArticles,
     };
+
+    console.log('Preview Data Captured:', {
+      title: previewData.title,
+      excerpt: previewData.excerpt,
+      featured_image_url: previewData.featured_image_url,
+      products: previewData.products,
+      productsCount: previewData.products.length,
+    });
 
     // Send to preview API
     try {
@@ -372,8 +396,9 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
 
           <div className="md:col-span-2">
             <ImageUpload
-              value={post?.featured_image_url || ""}
+              value={featuredImageUrl}
               onChange={(url) => {
+                setFeaturedImageUrl(url);
                 const input = document.getElementById("featured_image_url") as HTMLInputElement;
                 if (input) input.value = url;
               }}
@@ -385,7 +410,7 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
               id="featured_image_url"
               name="featured_image_url"
               type="hidden"
-              defaultValue={post?.featured_image_url || ""}
+              value={featuredImageUrl}
             />
           </div>
 

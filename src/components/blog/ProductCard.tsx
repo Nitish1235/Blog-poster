@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ExternalLink, ShoppingCart, CheckCircle2, Package } from "lucide-react";
 import Image from "next/image";
@@ -74,44 +73,51 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
   };
 
   return (
-    <Card
-      variant="white"
-      sharp={sharpCorner}
-      className="h-full flex flex-col overflow-hidden group hover:-translate-y-2 transition-all duration-300 hover:shadow-[8px_8px_0px_0px_#000000] border-2 border-black"
-    >
-      {/* Product Image */}
-      <div className="relative w-full h-56 sm:h-64 md:h-72 bg-gray-100 border-b-4 border-black overflow-hidden">
-        <Image
-          src={product.image_url}
-          alt={product.name}
-          fill
-          className="object-cover group-hover:scale-110 transition-transform duration-500"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
-        {product.is_featured && (
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary border-2 border-black px-3 py-1.5 sm:px-4 sm:py-2 font-black text-xs uppercase hard-shadow-sm z-10 rounded-md">
-            ⭐ Featured
-          </div>
-        )}
-        {asin && (
-          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 bg-black text-white px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-black uppercase rounded-md border-2 border-white/20">
-            ASIN: {asin}
-          </div>
-        )}
-      </div>
-
-      {/* Product Info */}
-      <div className="p-5 sm:p-6 md:p-7 flex flex-col flex-grow">
+    <article className="flex flex-col md:flex-row gap-6 md:gap-8 py-6 md:py-8 group">
+      {/* Left Side: Product Info */}
+      <div className="flex flex-col flex-grow md:w-1/2">
         {/* Product Name */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase mb-3 md:mb-4 leading-tight group-hover:text-primary transition-colors">
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold uppercase mb-3 md:mb-4 leading-tight group-hover:text-primary transition-colors">
           {product.name}
         </h3>
 
         {/* Full Description */}
         <div className="mb-6 md:mb-8 flex-grow">
-          <p className="text-gray-700 font-medium text-sm md:text-base leading-relaxed">
+          <p className="text-gray-700 font-medium text-sm md:text-base leading-relaxed break-words overflow-wrap-anywhere whitespace-normal word-wrap break-word">
             {product.description}
           </p>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="pt-4 border-t border-gray-200">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
+            <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
+            <span className="font-medium">Verified Amazon Product</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side: Product Image and Buttons */}
+      <div className="w-full md:w-1/2 flex flex-col">
+        {/* Product Image */}
+        <div className="relative w-full h-64 sm:h-72 md:h-[300px] bg-gray-100 overflow-hidden rounded-lg mb-4">
+          <Image
+            src={product.image_url}
+            alt={product.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+          {product.is_featured && (
+            <div className="absolute top-3 right-3 bg-primary px-3 py-1.5 font-black text-xs uppercase rounded-md">
+              ⭐ Featured
+            </div>
+          )}
+          {asin && (
+            <div className="absolute bottom-3 left-3 bg-black/80 text-white px-2.5 py-1.5 text-xs font-black uppercase rounded-md">
+              ASIN: {asin}
+            </div>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -150,15 +156,7 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
             <span className="sm:hidden">Add to Cart</span>
           </a>
         </div>
-
-        {/* Trust Indicators */}
-        <div className="mt-4 pt-4 border-t-2 border-black/20">
-          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
-            <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
-            <span className="font-bold">Verified Amazon Product</span>
-          </div>
-        </div>
       </div>
-    </Card>
+    </article>
   );
 };
