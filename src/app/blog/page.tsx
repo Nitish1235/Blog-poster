@@ -44,7 +44,8 @@ export const metadata: Metadata = {
 
 export default async function BlogExample() {
     const posts = await getAllBlogPosts(true);
-    const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Supabase is always configured via hardcoded fallbacks in src/lib/supabase/server.ts and client.ts
+    // No need to check for configuration - if there's an issue, it will be handled by the query functions
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-16">
@@ -62,17 +63,7 @@ export default async function BlogExample() {
                 </p>
             </div>
 
-            {!isSupabaseConfigured ? (
-                <Card className="p-8 text-center" sharp="br">
-                    <h2 className="text-2xl font-black uppercase mb-4">Database Not Configured</h2>
-                    <p className="font-medium text-gray-600 mb-4">
-                        Please set up your Supabase credentials in the <code className="bg-gray-100 px-2 py-1 rounded">.env.local</code> file.
-                    </p>
-                    <p className="text-sm text-gray-500">
-                        See <code className="bg-gray-100 px-2 py-1 rounded">ENV_SETUP.md</code> for instructions.
-                    </p>
-                </Card>
-            ) : posts.length === 0 ? (
+            {posts.length === 0 ? (
                 <div className="text-center py-20">
                     <p className="text-xl font-medium text-gray-500">No blog posts found. Check back soon!</p>
                 </div>
