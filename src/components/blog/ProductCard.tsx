@@ -77,10 +77,10 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
     <Card
       variant="white"
       sharp={sharpCorner}
-      className="h-full flex flex-col overflow-hidden group hover:-translate-y-2 transition-all duration-300 hover:shadow-[8px_8px_0px_0px_#000000]"
+      className="h-full flex flex-col overflow-hidden group hover:-translate-y-2 transition-all duration-300 hover:shadow-[8px_8px_0px_0px_#000000] border-2 border-black"
     >
       {/* Product Image */}
-      <div className="relative w-full h-56 sm:h-64 md:h-72 bg-gray-100 border-b-2 border-border overflow-hidden">
+      <div className="relative w-full h-56 sm:h-64 md:h-72 bg-gray-100 border-b-4 border-black overflow-hidden">
         <Image
           src={product.image_url}
           alt={product.name}
@@ -89,27 +89,27 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         {product.is_featured && (
-          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-primary border-2 border-black px-2 py-1 sm:px-4 sm:py-2 font-black text-xs uppercase hard-shadow-sm z-10">
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary border-2 border-black px-3 py-1.5 sm:px-4 sm:py-2 font-black text-xs uppercase hard-shadow-sm z-10 rounded-md">
             ⭐ Featured
           </div>
         )}
         {asin && (
-          <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-black/80 text-white px-2 py-1 sm:px-3 sm:py-1 text-xs font-bold uppercase rounded-md">
+          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 bg-black text-white px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-black uppercase rounded-md border-2 border-white/20">
             ASIN: {asin}
           </div>
         )}
       </div>
 
       {/* Product Info */}
-      <div className="p-4 sm:p-6 flex flex-col flex-grow">
+      <div className="p-5 sm:p-6 md:p-7 flex flex-col flex-grow">
         {/* Product Name */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase mb-2 md:mb-3 leading-tight group-hover:text-primary transition-colors">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase mb-3 md:mb-4 leading-tight group-hover:text-primary transition-colors">
           {product.name}
         </h3>
 
         {/* Full Description */}
-        <div className="mb-6 flex-grow">
-          <p className="text-gray-700 font-medium text-sm leading-relaxed">
+        <div className="mb-6 md:mb-8 flex-grow">
+          <p className="text-gray-700 font-medium text-sm md:text-base leading-relaxed">
             {product.description}
           </p>
         </div>
@@ -152,10 +152,10 @@ export const ProductCard = ({ product, index, blogPostId }: ProductCardProps) =>
         </div>
 
         {/* Trust Indicators */}
-        <div className="mt-4 pt-4 border-t-2 border-border">
-          <div className="flex items-center gap-2 text-xs text-gray-600">
-            <CheckCircle2 size={14} className="text-green-600" />
-            <span className="font-medium">Verified Amazon Product</span>
+        <div className="mt-4 pt-4 border-t-2 border-black/20">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
+            <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
+            <span className="font-bold">Verified Amazon Product</span>
           </div>
         </div>
       </div>
