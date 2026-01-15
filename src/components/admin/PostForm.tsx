@@ -179,6 +179,14 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
   };
 
   const handlePreview = async () => {
+    // Get form data - try multiple methods for reliability
+    const form = document.querySelector("form") as HTMLFormElement;
+    let formData: FormData | null = null;
+    
+    if (form) {
+      formData = new FormData(form);
+    }
+
     // Get form data directly from input elements (more reliable than FormData)
     const titleEl = document.getElementById("title") as HTMLInputElement;
     const slugEl = document.getElementById("slug") as HTMLInputElement;
@@ -189,19 +197,20 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
     const authorNameEl = document.querySelector('[name="author_name"]') as HTMLInputElement;
     const authorEmailEl = document.querySelector('[name="author_email"]') as HTMLInputElement;
     const readTimeEl = document.querySelector('[name="read_time"]') as HTMLInputElement;
+    const featuredImageInput = document.getElementById("featured_image_url") as HTMLInputElement;
 
-    // Prepare preview data (prefer state for featured image)
+    // Prepare preview data - use direct element access first, fallback to FormData
     const previewData = {
-      title: titleEl?.value?.trim() || "",
-      slug: slugEl?.value?.trim() || "",
-      excerpt: excerptEl?.value?.trim() || "",
-      content: contentEl?.value || "",
-      category_id: categoryEl?.value || "",
-      subcategory_id: subcategoryEl?.value || null,
-      author_name: authorNameEl?.value?.trim() || "",
-      author_email: authorEmailEl?.value?.trim() || "",
-      featured_image_url: featuredImageUrl || null,
-      read_time: parseInt(readTimeEl?.value || "5") || 5,
+      title: titleEl?.value?.trim() || formData?.get("title")?.toString().trim() || "",
+      slug: slugEl?.value?.trim() || formData?.get("slug")?.toString().trim() || "",
+      excerpt: excerptEl?.value?.trim() || formData?.get("excerpt")?.toString().trim() || "",
+      content: contentEl?.value || formData?.get("content")?.toString() || "",
+      category_id: categoryEl?.value || formData?.get("category_id")?.toString() || "",
+      subcategory_id: subcategoryEl?.value || formData?.get("subcategory_id")?.toString() || null,
+      author_name: authorNameEl?.value?.trim() || formData?.get("author_name")?.toString().trim() || "",
+      author_email: authorEmailEl?.value?.trim() || formData?.get("author_email")?.toString().trim() || "",
+      featured_image_url: featuredImageUrl || featuredImageInput?.value || formData?.get("featured_image_url")?.toString() || null,
+      read_time: parseInt(readTimeEl?.value || formData?.get("read_time")?.toString() || "5") || 5,
       products: products
         .filter((p) => p.name && p.amazon_affiliate_link && p.image_url && p.description)
         .map((p, index) => ({
@@ -214,9 +223,16 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
     console.log('Preview Data Captured:', {
       title: previewData.title,
       excerpt: previewData.excerpt,
+      content: previewData.content?.substring(0, 100),
       featured_image_url: previewData.featured_image_url,
       products: previewData.products,
       productsCount: previewData.products.length,
+      elementValues: {
+        titleEl: titleEl?.value?.substring(0, 50),
+        excerptEl: excerptEl?.value?.substring(0, 50),
+        contentEl: contentEl?.value?.substring(0, 50),
+        featuredImageUrl: featuredImageUrl,
+      }
     });
 
     // Send to preview API
@@ -235,9 +251,28 @@ export function PostForm({ categories, post, action, allPosts = [] }: PostFormPr
 
       const previewPost = await response.json();
       
+      // Log the response for debugging
+      console.log('Preview API Response:', {
+        hasTitle: !!previewPost.title,
+        hasExcerpt: !!previewPost.excerpt,
+        hasContent: !!previewPost.content,
+        hasFeaturedImage: !!previewPost.featured_image_url,
+        hasProducts: !!previewPost.products,
+        productsCount: previewPost.products?.length || 0,
+        titlePreview: previewPost.title?.substring(0, 50),
+        excerptPreview: previewPost.excerpt?.substring(0, 50),
+        contentPreview: previewPost.content?.substring(0, 50),
+      });
+      
       // Store preview data in sessionStorage and open preview
-      sessionStorage.setItem('previewPost', JSON.stringify(previewPost));
-      window.open(`/admin/posts/preview`, '_blank');
+      try {
+        sessionStorage.setItem('previewPost', JSON.stringify(previewPost));
+        console.log('Preview data stored in sessionStorage');
+        window.open(`/admin/posts/preview`, '_blank');
+      } catch (storageError) {
+        console.error('Error storing preview data:', storageError);
+        alert('Failed to store preview data. Please check browser console for details.');
+      }
     } catch (error: any) {
       alert('Failed to generate preview: ' + error.message);
     }

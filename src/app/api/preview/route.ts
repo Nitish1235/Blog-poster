@@ -19,6 +19,20 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
+    
+    // Log received data for debugging
+    console.log('Preview API received data:', {
+      hasTitle: !!body.title,
+      hasExcerpt: !!body.excerpt,
+      hasContent: !!body.content,
+      hasFeaturedImage: !!body.featured_image_url,
+      hasProducts: !!body.products,
+      productsCount: body.products?.length || 0,
+      titlePreview: body.title?.substring(0, 50),
+      excerptPreview: body.excerpt?.substring(0, 50),
+      contentPreview: body.content?.substring(0, 50),
+    })
+    
     const {
       title,
       slug,
@@ -101,18 +115,18 @@ export async function POST(request: Request) {
       is_featured: product.is_featured || false,
     }))
 
-    // Return preview data
-    return NextResponse.json({
+    // Return preview data - ensure all fields are included
+    const previewResponse = {
       id: 'preview',
-      title,
-      slug,
-      excerpt,
-      content,
-      category_id,
-      subcategory_id,
-      author_name,
-      author_email,
-      featured_image_url,
+      title: title || '',
+      slug: slug || '',
+      excerpt: excerpt || '',
+      content: content || '',
+      category_id: category_id || '',
+      subcategory_id: subcategory_id || null,
+      author_name: author_name || '',
+      author_email: author_email || '',
+      featured_image_url: featured_image_url || null,
       read_time: read_time || 5,
       published: false,
       published_at: null,
@@ -122,7 +136,20 @@ export async function POST(request: Request) {
       subcategory: subcategory || null,
       products: formattedProducts,
       related_articles: relatedArticlesData,
+    }
+    
+    // Log final response
+    console.log('Preview API returning data:', {
+      hasTitle: !!previewResponse.title,
+      hasExcerpt: !!previewResponse.excerpt,
+      hasContent: !!previewResponse.content,
+      hasFeaturedImage: !!previewResponse.featured_image_url,
+      titleLength: previewResponse.title?.length || 0,
+      excerptLength: previewResponse.excerpt?.length || 0,
+      contentLength: previewResponse.content?.length || 0,
     })
+    
+    return NextResponse.json(previewResponse)
   } catch (error: any) {
     console.error('Preview error:', error)
     return NextResponse.json({ error: error.message || 'Failed to generate preview' }, { status: 500 })
