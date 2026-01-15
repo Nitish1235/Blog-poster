@@ -38,6 +38,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Prevent default link hover styles on blog cards */
+a.group:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Mobile-friendly touch targets */
 button,
 a,

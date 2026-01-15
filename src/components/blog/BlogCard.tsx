@@ -24,7 +24,7 @@ export const BlogCard = ({ post, index }: BlogCardProps) => {
     const sharpCorner = corners[index % 4];
 
     return (
-        <Link href={`/blog/${post.slug}`} className="group relative block">
+        <Link href={`/blog/${post.slug}`} className="group relative block hover:no-underline text-inherit hover:text-inherit">
             <Card
                 sharp={sharpCorner}
                 className="h-full flex flex-col transition-transform hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_#000000] cursor-pointer bg-white"
@@ -65,7 +65,7 @@ export const BlogCard = ({ post, index }: BlogCardProps) => {
                         {post.excerpt}
                     </p>
 
-                    <div className="text-xs sm:text-sm font-bold uppercase text-gray-400">
+                    <div className="text-xs sm:text-sm font-bold uppercase text-gray-400 group-hover:text-gray-400">
                         Read Article →
                     </div>
                 </div>
