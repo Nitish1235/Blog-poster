@@ -67,7 +67,7 @@ export async function generateMetadata({
                     url: featuredImage,
                     width: 1200,
                     height: 630,
-                    alt: post.title,
+                    alt: `${post.title} - ${post.category.name}${post.subcategory ? ` ${post.subcategory.name}` : ''} product review featured image`,
                 },
             ],
         },
@@ -254,7 +254,7 @@ export default async function BlogPost({
                                     <div className="absolute -inset-2 bg-black rounded-[12px] transform rotate-2 group-hover:rotate-3 transition-transform"></div>
                                     <img
                                         src={post.featured_image_url}
-                                        alt={post.title}
+                                        alt={`${post.title} - ${post.category.name}${post.subcategory ? ` ${post.subcategory.name}` : ''} product review featured image`}
                                         className="relative w-full h-auto border-4 border-black hard-shadow-lg rounded-[10px] transform group-hover:scale-[1.02] transition-transform duration-300"
                                     />
                                 </div>

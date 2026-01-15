@@ -35,7 +35,7 @@ export const BlogCard = ({ post, index }: BlogCardProps) => {
                     <div className="relative h-40 sm:h-48 w-full border-b-2 border-border mb-3 md:mb-4 overflow-hidden">
                         <Image
                             src={post.featured_image_url}
-                            alt={post.title}
+                            alt={`${post.title} - ${post.category} product review and recommendations`}
                             fill
                             className="object-cover"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

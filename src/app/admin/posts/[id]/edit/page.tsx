@@ -17,7 +17,7 @@ async function getPost(id: string) {
       products:affiliate_products(*)
     `)
     .eq("id", id)
-    .single();
+    .maybeSingle();
   
   if (data) {
     // Fetch related articles

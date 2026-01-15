@@ -211,7 +211,7 @@ export default function PreviewPage() {
                   <div className="absolute -inset-2 bg-black rounded-[12px] transform rotate-2 group-hover:rotate-3 transition-transform"></div>
                   <img
                     src={previewPost.featured_image_url}
-                    alt={previewPost.title}
+                    alt={`${previewPost.title} - ${previewPost.category?.name || 'Product'}${previewPost.subcategory?.name ? ` ${previewPost.subcategory.name}` : ''} product review featured image`}
                     className="relative w-full h-auto border-4 border-black hard-shadow-lg rounded-[10px] transform group-hover:scale-[1.02] transition-transform duration-300"
                   />
                 </div>
